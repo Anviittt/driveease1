@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page - Drive Ease</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        .payment-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        .payment-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .payment-details {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">Drive Ease</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container my-5">
+        <div class="payment-container">
+            <h2 class="payment-header">Complete Your Payment</h2>
+
+            <div class="payment-details">
+                <p><strong>Selected Timing:</strong> <span id="selectedTiming"></span></p>
+                <p><strong>Vehicle Type:</strong> <span id="selectedVehicle"></span></p>
+                <p><strong>Amount to Pay:</strong> ₹<span id="amountToPay"></span></p>
+            </div>
+
+            <div class="text-center">
+                <button id="payButton" class="btn btn-success btn-lg">Proceed to Pay</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center mt-5 py-3 bg-dark text-white">
+        <p>&copy; 2025 Drive Ease. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Get values from URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var amount = urlParams.get('amount');
+        var timing = urlParams.get('timing');
+        var vehicle = urlParams.get('vehicle');
+
+        // Set values in UI
+        document.getElementById("amountToPay").innerText = amount;
+        document.getElementById("selectedTiming").innerText = timing ? timing : "Not Selected";
+        document.getElementById("selectedVehicle").innerText = vehicle ? vehicle : "Not Selected";
+
+        // Razorpay Payment
+        document.getElementById("payButton").addEventListener("click", function () {
+            var options = {
+                "key": "rzp_test_aHQNXN3GNODapw",  // Your Razorpay Key
+                "amount": amount * 100,  // Convert to paisa
+                "currency": "INR",
+                "name": "Drive Ease",
+                "description": "Driving School Payment",
+                "handler": function (response) {
+                    alert("Payment Successful! Transaction ID: " + response.razorpay_payment_id);
+                    window.location.href = "success.html";  // Redirect to success page
+                },
+                "theme": {
+                    "color": "#28a745"
+                }
+            };
+
+            var rzp = new Razorpay(options);
+            rzp.open();
+        });
+    </script>
+</body>
+</html>

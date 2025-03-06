@@ -1,0 +1,23 @@
+<script>
+    document.getElementById("submitButton").onclick = function() {
+        var selectedTiming = document.getElementById("timing").value;
+        var selectedVehicle = document.getElementById("vehicle").options[document.getElementById("vehicle").selectedIndex].text;
+        var vehiclePrice = document.getElementById("vehicle").value;
+
+        Swal.fire({
+            title: "Confirm Selection",
+            text: "You selected " + selectedTiming + " with " + selectedVehicle + ". Proceed to payment?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Proceed",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log("Redirecting to payment page..."); // Debugging step
+                window.location.href = "payment.html?amount=" + vehiclePrice;
+            } else {
+                console.log("User cancelled payment.");
+            }
+        });
+    };
+</script>
